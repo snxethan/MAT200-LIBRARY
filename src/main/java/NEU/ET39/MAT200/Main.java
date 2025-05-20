@@ -34,6 +34,7 @@ public class Main {
             System.out.println("6. [U3] Caesar Cipher");
             System.out.println("7. [U3] Multiplicative Cipher");
             System.out.println("8. [U3] Affine Cipher");
+            System.out.println("9. [U4] Vigenere Cipher");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
@@ -57,7 +58,7 @@ public class Main {
                     runConsoleTransposition(scanner);
                     break;
                 case 6:
-                    runConsoleCeasar(scanner);
+                    runConsoleCaesar(scanner);
                     break;
                 case 7:
                     runConsoleMultiplicative(scanner);
@@ -65,6 +66,51 @@ public class Main {
                 case 8:
                     runConsoleAffine(scanner);
                     break;
+                case 9:
+                    runConsoleVigenere(scanner);
+                default:
+                    System.out.println(invalid);
+            }
+        }
+    }
+
+    public static void runConsoleVigenere(Scanner scanner) {
+        while (true) {
+            System.out.println("-- VIGENERE CIPHER --");
+            System.out.println(mainMenu);
+            System.out.println("1. Encrypt");
+            System.out.println("2. Decrypt");
+
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println(invalidNum);
+                continue;
+            }
+
+            switch (choice) {
+                case 0:
+                    System.out.println(returnToMain);
+                    return;
+                case 1: {
+                    System.out.println("Encrypt");
+                    System.out.println("Enter your key: ");
+                    String key = scanner.nextLine();
+                    System.out.println("Enter your message: ");
+                    String message = scanner.nextLine();
+                    System.out.println(VigenereCipher.encrypt(message,key));
+                    break;
+                }
+                case 2: {
+                    System.out.println("Decrypt");
+                    System.out.println("Enter your key: ");
+                    String key = scanner.nextLine();
+                    System.out.println("Enter your message: ");
+                    String message = scanner.nextLine();
+                    System.out.println(VigenereCipher.decrypt(message,key));
+                    break;
+                }
                 default:
                     System.out.println(invalid);
             }
@@ -227,12 +273,14 @@ public class Main {
     }
 
 
-    public static void runConsoleCeasar(Scanner scanner) {
+    public static void runConsoleCaesar(Scanner scanner) {
         while(true){
             System.out.println("-- CAESAR CIPHER --");
             System.out.println(mainMenu);
-            System.out.println("1. Encrypt");
-            System.out.println("2. Decrypt");
+            System.out.println("1. Encrypt by Shift");
+            System.out.println("2. Encrypt by Key Word/Phrase");
+            System.out.println("3. Decrypt by Shift");
+            System.out.println("4. Decrypt by Key Word/Phrase");
 
             int choice;
             try {
@@ -254,10 +302,20 @@ public class Main {
                     int shift = scanner.nextInt();
                     scanner.nextLine(); // consume newline
                     System.out.println("Encrypting... by a shift of " + shift);
-                    System.out.println(CaesarCipher.encrypt(message, shift) + "\n");
+                    System.out.println(CaesarCipher.encryptByShift(message, shift) + "\n");
                     break;
                 }
                 case 2: {
+                    System.out.println("Encrypt");
+                    System.out.println(enterMessage);
+                    String message = scanner.nextLine();
+                    System.out.println("\nEnter your key word: ");
+                    String key = scanner.nextLine();
+                    System.out.println("Encrypting... by a key of " + key);
+                    System.out.println(CaesarCipher.encryptByKeyWord(message, key) + "\n");
+                    break;
+                }
+                case 3: {
                     System.out.println("Decrypt");
                     System.out.println(enterMessage);
                     String message = scanner.nextLine();
@@ -265,7 +323,17 @@ public class Main {
                     int shift = scanner.nextInt();
                     scanner.nextLine(); // consume newline
                     System.out.println("Decrypting... by a shift of " + shift);
-                    System.out.println(CaesarCipher.decrypt(message, shift) + "\n");
+                    System.out.println(CaesarCipher.decryptByShift(message, shift) + "\n");
+                    break;
+                }
+                case 4: {
+                    System.out.println("Decrypt");
+                    System.out.println(enterMessage);
+                    String message = scanner.nextLine();
+                    System.out.println("\nEnter your key word: ");
+                    String key = scanner.nextLine();
+                    System.out.println("Decrypting... by a key of " + key);
+                    System.out.println(CaesarCipher.decryptByKeyWord(message, key) + "\n");
                     break;
                 }
                 default:
