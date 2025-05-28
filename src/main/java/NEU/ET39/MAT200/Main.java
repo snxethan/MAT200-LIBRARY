@@ -1,5 +1,6 @@
 package NEU.ET39.MAT200;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -35,6 +36,7 @@ public class Main {
             System.out.println("7. [U3] Multiplicative Cipher");
             System.out.println("8. [U3] Affine Cipher");
             System.out.println("9. [U4] Vigenere Cipher");
+            System.out.println("10. [FINAL] RSA Cipher");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
@@ -68,11 +70,118 @@ public class Main {
                     break;
                 case 9:
                     runConsoleVigenere(scanner);
+                case 10:
+                    runConsoleRSA(scanner);
+                default:
+                    System.out.println(invalid);
+                case 11:
+                    // turn text to all upper
+                    System.out.println("Enter your message: ");
+                    String message = scanner.nextLine();
+                    System.out.println(message.toUpperCase());
+            }
+        }
+    }
+
+
+    public static void runConsoleRSA(Scanner scanner) {
+        RSACipher rsa = new RSACipher();
+
+        while (true) {
+            System.out.println("-- RSA CIPHER --");
+            System.out.println(mainMenu);
+            System.out.println("1. Generate & Save Public + Private Key");
+            System.out.println("2. Encrypt Message with Public Key File");
+            System.out.println("3. Load Private Key & Decrypt Message");
+            System.out.println("4. Encrypt and Save Message for Someone");
+
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println(invalidNum);
+                continue;
+            }
+
+            switch (choice) {
+                case 0:
+                    System.out.println(returnToMain);
+                    return;
+
+                case 1: {
+                    System.out.println("Enter file name to save your public key (e.g. ethantownsend_pubkey.txt):");
+                    String pubFile = scanner.nextLine().trim();
+                    rsa.savePublicKeyToFile(pubFile);
+
+                    System.out.println("Enter file name to save your private key (e.g. ethantownsend_privatekey.txt):");
+                    String privFile = scanner.nextLine().trim();
+                    rsa.savePrivateKeyToFile(privFile);
+                    break;
+                }
+
+                case 2: {
+                    System.out.println("Enter the path to recipient's public key file:");
+                    String path = scanner.nextLine().trim();
+                    BigInteger[] pubKey = RSACipher.loadPublicKeyFromFile(path);
+                    if (pubKey == null) break;
+
+                    System.out.println("Enter your message:");
+                    String message = scanner.nextLine();
+                    try {
+                        BigInteger encrypted = rsa.encryptBlock(message, pubKey[0], pubKey[1]);
+                        System.out.println("Encrypted Message:\n" + encrypted);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                    break;
+                }
+
+                case 3: {
+                    System.out.println("Enter your private key file path:");
+                    String privPath = scanner.nextLine().trim();
+                    BigInteger[] privateKey = RSACipher.loadPrivateKeyFromFile(privPath);
+                    if (privateKey == null) break;
+
+                    rsa.loadPrivateKey(privateKey[0], privateKey[1]);
+
+                    System.out.println("Enter encrypted message:");
+                    String input = scanner.nextLine().trim();
+                    try {
+                        BigInteger encrypted = new BigInteger(input);
+                        String decrypted = rsa.decryptBlock(encrypted);
+                        System.out.println("Decrypted Message:\n" + decrypted);
+                    } catch (Exception e) {
+                        System.out.println("Invalid input or decryption error.");
+                    }
+                    break;
+                }
+
+                case 4: {
+                    System.out.println("Enter recipient's public key file path:");
+                    String path = scanner.nextLine().trim();
+                    BigInteger[] pubKey = RSACipher.loadPublicKeyFromFile(path);
+                    if (pubKey == null) break;
+
+                    System.out.println("Enter your message:");
+                    String message = scanner.nextLine();
+                    try {
+                        BigInteger encrypted = rsa.encryptBlock(message, pubKey[0], pubKey[1]);
+                        System.out.println("Enter output file name to save:");
+                        String file = scanner.nextLine().trim();
+                        rsa.saveEncryptedMessage(encrypted, file);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Encryption error: " + e.getMessage());
+                    }
+                    break;
+                }
+
                 default:
                     System.out.println(invalid);
             }
         }
     }
+
+
 
     public static void runConsoleVigenere(Scanner scanner) {
         while (true) {
@@ -95,20 +204,20 @@ public class Main {
                     return;
                 case 1: {
                     System.out.println("Encrypt");
+                    System.out.println(enterMessage);
+                    String message = scanner.nextLine();
                     System.out.println("Enter your key: ");
                     String key = scanner.nextLine();
-                    System.out.println("Enter your message: ");
-                    String message = scanner.nextLine();
                     System.out.println(VigenereCipher.encrypt(message,key));
                     break;
                 }
                 case 2: {
                     System.out.println("Decrypt");
+                    System.out.println(enterMessage);
+                    String message = scanner.nextLine();
                     System.out.println("Enter your key: ");
                     String key = scanner.nextLine();
-                    System.out.println("Enter your message: ");
-                    String message = scanner.nextLine();
-                    System.out.println(VigenereCipher.decrypt(message,key));
+                    System.out.println("            " +VigenereCipher.decrypt(message,key));
                     break;
                 }
                 default:

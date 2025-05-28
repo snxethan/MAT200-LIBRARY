@@ -61,48 +61,59 @@ public class CaesarCipher {
         return encryptedMessage.toString(); // return the encrypted message
     }
 
-    // Keyword-based monoalphabetic substitution encryption
+    /**
+     * Encrypts a message using the Caesar Cipher algorithm with a keyword.
+     * The keyword is used to generate a substitution cipher.
+     * The letters in the keyword are added first, followed by the remaining letters of the alphabet in order.
+     * @param message the message to encrypt
+     * @param keyword the keyword to use for encryption
+     * @return the encrypted message
+     */
     public static String encryptByKeyWord(String message, String keyword) {
-        String cipherAlphabet = generateCipherAlphabet(keyword); // generate the cipher alphabet based on the keyword
-        StringBuilder encryptedMessage = new StringBuilder(); // StringBuilder is more efficient for string concatenation
+        String cipherAlphabet = generateCipherAlphabet(keyword);
+        System.out.println("Plain Text:  " + ALPHABET);
+        System.out.println("Cipher Text: " + cipherAlphabet);
 
-        for (char c : message.toCharArray()) { // iterate through each character in the message
-            if (Character.isUpperCase(c)) { // check if the character is uppercase
-                int idx = c - 'A'; // calculate the index of the letter in the alphabet
-                encryptedMessage.append(cipherAlphabet.charAt(idx)); // append the corresponding letter from the cipher alphabet
-            } else if (Character.isLowerCase(c)) { // check if the character is lowercase
-                int idx = c - 'a'; // calculate the index of the letter in the alphabet
-                encryptedMessage.append(Character.toLowerCase(cipherAlphabet.charAt(idx))); // append the corresponding letter from the cipher alphabet
+        StringBuilder encryptedMessage = new StringBuilder();
+        for (char c : message.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                int idx = c - 'A';
+                encryptedMessage.append(cipherAlphabet.charAt(idx));
+            } else if (Character.isLowerCase(c)) {
+                int idx = c - 'a';
+                encryptedMessage.append(Character.toLowerCase(cipherAlphabet.charAt(idx)));
             } else {
-                encryptedMessage.append(c); // if not a letter, append the character as is
+                encryptedMessage.append(c);
             }
         }
-        return encryptedMessage.toString(); // return the encrypted message
+        return encryptedMessage.toString();
     }
 
     /**
      * Decrypts a message using the Caesar Cipher algorithm.
      * The message is shifted back by the specified number of positions in the alphabet.
      * @param message the message to decrypt
-     * @param shift the number of positions to shift back
+     * @param keyword the number of positions to shift back
      * @return the decrypted message
      */
-    public static String decryptByKeyWord(String message, String shift) {
-        String cipherAlphabet = generateCipherAlphabet(shift); // generate the cipher alphabet based on the shift
-        StringBuilder decryptedMessage = new StringBuilder(); // StringBuilder is more efficient for string concatenation
+    public static String decryptByKeyWord(String message, String keyword) {
+        String cipherAlphabet = generateCipherAlphabet(keyword);
+        System.out.println("Cipher Text: " + cipherAlphabet);
+        System.out.println("Plain Text:  " + ALPHABET);
 
-        for (char c : message.toCharArray()) { // iterate through each character in the message
-            if (Character.isUpperCase(c)) { // check if the character is uppercase
-                int idx = cipherAlphabet.indexOf(c); // find the index of the letter in the cipher alphabet
-                decryptedMessage.append(ALPHABET.charAt(idx)); // append the corresponding letter from the original alphabet
-            } else if (Character.isLowerCase(c)) { // check if the character is lowercase
-                int idx = cipherAlphabet.indexOf(Character.toUpperCase(c)); // find the index of the letter in the cipher alphabet
-                decryptedMessage.append(Character.toLowerCase(ALPHABET.charAt(idx))); // append the corresponding letter from the original alphabet
+        StringBuilder decryptedMessage = new StringBuilder();
+        for (char c : message.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                int idx = cipherAlphabet.indexOf(c);
+                decryptedMessage.append(ALPHABET.charAt(idx));
+            } else if (Character.isLowerCase(c)) {
+                int idx = cipherAlphabet.indexOf(Character.toUpperCase(c));
+                decryptedMessage.append(Character.toLowerCase(ALPHABET.charAt(idx)));
             } else {
-                decryptedMessage.append(c); // if not a letter, append the character as is
+                decryptedMessage.append(c);
             }
         }
-        return decryptedMessage.toString(); // return the decrypted message
+        return decryptedMessage.toString();
     }
 
     /**
@@ -117,3 +128,8 @@ public class CaesarCipher {
         return encryptByShift(message, ALPHABET_SIZE - shift); // call the encryptByShift method with the negative shift to decrypt
     }
 }
+
+
+
+
+
