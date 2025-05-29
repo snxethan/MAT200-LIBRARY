@@ -90,10 +90,10 @@ public class Main {
         while (true) {
             System.out.println("-- RSA CIPHER --");
             System.out.println(mainMenu);
-            System.out.println("1. Generate & Save Public + Private Key");
-            System.out.println("2. Encrypt Message with Public Key File");
-            System.out.println("3. Load Private Key & Decrypt Message");
-            System.out.println("4. Encrypt and Save Message for Someone");
+            System.out.println("1. Generate/Save Public Key");
+            System.out.println("2. Generate/Save  Private Key");
+            System.out.println("3. Encrypt Message with Public Key");
+            System.out.println("4. Decrypt Message with Private Key");
 
             int choice;
             try {
@@ -109,26 +109,27 @@ public class Main {
                     return;
 
                 case 1: {
-                    System.out.println("Enter file name to save your public key (e.g. ethantownsend_pubkey.txt):");
-                    String pubFile = scanner.nextLine().trim();
-                    rsa.savePublicKeyToFile(pubFile);
-
-                    System.out.println("Enter file name to save your private key (e.g. ethantownsend_privatekey.txt):");
-                    String privFile = scanner.nextLine().trim();
-                    rsa.savePrivateKeyToFile(privFile);
+                    System.out.println("Enter filename to save public key (e.g. yourname_key.txt):");
+                    String filename = scanner.nextLine().trim();
+                    rsa.savePublicKeyOnly(filename);
                     break;
                 }
-
                 case 2: {
-                    System.out.println("Enter the path to recipient's public key file:");
+                    System.out.println("Enter filename to save private key (e.g. yourname_key.txt):");
+                    String filename = scanner.nextLine().trim();
+                    rsa.savePrivateKeyOnly(filename);
+                    break;
+                }
+                case 3: {
+                    System.out.println("Enter the path to key file (e.g. person_key.txt):");
                     String path = scanner.nextLine().trim();
-                    BigInteger[] pubKey = RSACipher.loadPublicKeyFromFile(path);
-                    if (pubKey == null) break;
+                    BigInteger[] key = RSACipher.loadPublicKeyFromTxt(path);
+                    if (key == null) break;
 
                     System.out.println("Enter your message:");
                     String message = scanner.nextLine();
                     try {
-                        BigInteger encrypted = rsa.encryptBlock(message, pubKey[0], pubKey[1]);
+                        BigInteger encrypted = rsa.encryptBlock(message, key[0], key[1]);
                         System.out.println("Encrypted Message:\n" + encrypted);
                     } catch (IllegalArgumentException e) {
                         System.out.println("Error: " + e.getMessage());
@@ -136,13 +137,13 @@ public class Main {
                     break;
                 }
 
-                case 3: {
-                    System.out.println("Enter your private key file path:");
-                    String privPath = scanner.nextLine().trim();
-                    BigInteger[] privateKey = RSACipher.loadPrivateKeyFromFile(privPath);
-                    if (privateKey == null) break;
+                case 4: {
+                    System.out.println("Enter your key file path (e.g. yourname_key.txt):");
+                    String path = scanner.nextLine().trim();
+                    BigInteger[] key = RSACipher.loadPrivateKeyFromTxt(path);
+                    if (key == null) break;
 
-                    rsa.loadPrivateKey(privateKey[0], privateKey[1]);
+                    rsa.loadPrivateKey(key[0], key[1]); // d and n
 
                     System.out.println("Enter encrypted message:");
                     String input = scanner.nextLine().trim();
@@ -156,30 +157,12 @@ public class Main {
                     break;
                 }
 
-                case 4: {
-                    System.out.println("Enter recipient's public key file path:");
-                    String path = scanner.nextLine().trim();
-                    BigInteger[] pubKey = RSACipher.loadPublicKeyFromFile(path);
-                    if (pubKey == null) break;
-
-                    System.out.println("Enter your message:");
-                    String message = scanner.nextLine();
-                    try {
-                        BigInteger encrypted = rsa.encryptBlock(message, pubKey[0], pubKey[1]);
-                        System.out.println("Enter output file name to save:");
-                        String file = scanner.nextLine().trim();
-                        rsa.saveEncryptedMessage(encrypted, file);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Encryption error: " + e.getMessage());
-                    }
-                    break;
-                }
-
                 default:
                     System.out.println(invalid);
             }
         }
     }
+
 
 
 
