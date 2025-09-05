@@ -183,12 +183,6 @@ This is a course project repository. For educational purposes, please:
 
 This project is developed for educational purposes as part of the MAT200 course at Northeastern University.
 
-## Authors
+## Author(s)
 
-- Course: MAT200 - Discrete Structures
-- Institution: Northeastern University
-- Developed for academic purposes
-
----
-
-For questions or issues, please use the GitHub issues tracker.
+- [**Ethan Townsend (snxethan)**](www.ethantownsend.dev)
