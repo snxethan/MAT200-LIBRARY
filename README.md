@@ -185,4 +185,4 @@ This project is developed for educational purposes as part of the MAT200 course 
 
 ## Author(s)
 
-- [**Ethan Townsend (snxethan)**](www.ethantownsend.dev)
+- [**Ethan Townsend (snxethan)**](https://www.ethantownsend.dev)
